@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+</head>
+
+<body>
+    <h1>
+        <% if(!username){%>
+            <%-include("head",{name:"小红花",login:"",register:'',out:"退出"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:""})%>
+                        <%  }%>
+
+    </h1>
+</body>
+<script src="/bootstrap/js/jquery-1.10.1.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+</html>

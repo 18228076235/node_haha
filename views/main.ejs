@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+
+    <script type="text/javascript" src="/javascripts/xheditor/jquery/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="/javascripts/xheditor/xheditor-1.2.2.min.js"></script>
+    <script type="text/javascript" src="/javascripts/xheditor/xheditor_lang/zh-cn.js"></script>
+    <script src="/layer/mobile/layer.js"></script>
+    <link rel="stylesheet" href="/layer/mobile/need/layer.css" />
+</head>
+<style>
+    .comment {
+        padding: 2%;
+        background: rgb(248, 138, 138);
+        position: fixed;
+        left: 5%;
+        top: 40%;
+        color: white;
+        font-size: 20px;
+        text-align: center;
+        line-height: 10%;
+        cursor: pointer;
+    }
+    
+    .chek-love,
+    .chek-hate {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    .page {
+        width: 50%;
+        margin: 0 auto;
+        height: 30%;
+    }
+    
+    .page a {
+        padding: 1%;
+        background: rgb(64, 122, 231);
+        border-radius: 10%;
+        margin: 0% 5%;
+        margin-bottom: 100px;
+        color: white;
+    }
+    
+    .like:hover img {
+        padding: 10%;
+        transform: rotate(180deg)
+    }
+    
+    .hate:hover img {
+        padding: 10%;
+        transform: rotate(180deg)
+    }
+    
+    .layui-m-layermain {
+        display: none;
+    }
+    
+    .l-comment {
+        padding: 1%;
+        cursor: pointer;
+        position: relative;
+        border: 1px solid #cccccc;
+        color: green;
+        left: 8%;
+    }
+    
+    .m-comment {
+        position: absolute;
+        top: -268%;
+        left: -10%;
+        display: none;
+    }
+    
+    .m-comment button {
+        width: 100%;
+        position: absolute;
+        top: 79%;
+        border: none;
+    }
+    
+    .m-comment textarea {
+        background: #eee;
+        border: none;
+        border-radius: 3%;
+    }
+    
+    .list-comment {
+        width: 100%;
+        height: auto;
+        font-size: 12px;
+        color: rgb(102, 104, 112);
+        background: rgb(213, 234, 240);
+        margin-top: 10%;
+        padding: 2%;
+        display: none;
+    }
+    
+    .list-comment p {
+        width: 100%;
+    }
+    
+    .list-comment p span {
+        padding: 0 2%;
+    }
+    
+    .list-comment p i {
+        float: right;
+        color: rgb(123, 123, 123)
+    }
+</style>
+
+<body>
+    <h1>
+        <% if(username){%>
+            <%-include("head",{name:username,login:"",register:'',out:"退出",center:"glyphicon glyphicon-user"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:"",center:""})%>
+                        <%  }%>
+
+    </h1>
+    <div id="cot-main">
+        <div class="comment  glyphicon glyphicon-pencil" onclick="window.location.href='/comment'">发帖</div>
+        <ul>
+            <%resout.forEach((val,inx)=>{%>
+                <li>
+                    <p>
+                        <%-val.text%>
+                    </p>
+                    <div class="do-you">
+                        <span class="lik">like:<em><%-val.love%></em></span><i class="like"><img src="/images/11.jpeg" alt="" /><input type="checkbox" name="" class="chek-love" data-id='<%-val.id%>'></i>
+                        <span class="hat">hate:<em><%-val.hate%></em></span> <i class="hate"><img src="/images/22.jpg" alt="" /><input type="checkbox" name="" class="chek-hate" data-id='<%-val.id%>'></i>
+                        <!-- Button trigger modal -->
+                        <div class="glyphicon glyphicon-option-horizontal l-comment" data-id='<%-val.id%>'>
+                            <a> 评论</a>
+                            <div class="m-comment">
+                                <textarea name="" id="" cols="30" rows="7" placeholder="评论......"></textarea>
+                                <button class="btn btn-info btn-xs">提交</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <p class="my"><img src='<%-val.profile_image%>'><i><%-val.name%></i></p>
+                    <div class="list-comment">
+                    </div>
+                </li>
+                <%  })%>
+        </ul>
+        <div class="page">
+            <a href="/main?pageNo=1">首页</a>
+            <a href="/main?pageNo=<%-pageNo<=1?1:pageNo-1%>">上一页</a>
+            <a href="/main?pageNo=<%-pageNo>=page?page:pageNo+1%>">下一页</a>
+            <a href="/main?pageNo=<%-page%>">尾页</a>
+        </div>
+    </div>
+
+
+</body>
+<script src="/bootstrap/js/jquery-1.10.1.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/layer/mobile/layer.js"></script>
+<script>
+    $(function() {
+        //喜欢
+        $('.chek-love').click(function() {
+            var k = $(this).parent().prev().children();
+            var cont = 0;
+
+            if ($(this).prop('checked')) {
+                cont = 1;
+            } else {
+                cont = -1
+            }
+
+            $.ajax({
+                url: '/users/ilike',
+                method: 'get',
+                data: {
+                    id: $(this).attr('data-id'),
+                    cont: cont
+                },
+                success: function(data) {
+                    console.log(data)
+                    if (data == 1) {
+                        var cont = Number(k.html())
+                        cont++;
+                        k.html(cont)
+                    } else {
+                        var cont = Number(k.html())
+                        cont--;
+                        k.html(cont)
+                    }
+                }
+            })
+        })
+
+
+        //不喜欢
+        $('.chek-hate').click(function() {
+            var k = $(this).parent().prev().children();
+            var cont = 0;
+            if ($(this).prop('checked')) {
+                cont = 1;
+            } else {
+                cont = -1
+            }
+
+            $.ajax({
+                url: '/users/ihate',
+                method: 'get',
+                data: {
+                    id: $(this).attr('data-id'),
+                    cont: cont
+                },
+                success: function(data) {
+
+                    if (data == 1) {
+                        var cont = Number(k.html())
+                        cont++;
+                        k.html(cont)
+                    } else {
+                        var cont = Number(k.html())
+                        cont--;
+                        k.html(cont)
+                    }
+                }
+            })
+        })
+
+
+        $('.l-comment').on('click', 'a', function() {
+            $(this).parent().children().eq(1).css('display', 'block');
+
+
+            var id = $(this).parent().attr('data-id')
+
+            $('.l-comment').on('click', 'button', function() {
+                var m = $(this).parent();
+                var text = $(this).prev().val()
+                var list = $(this).parent().parent().parent().next().next();
+                console.log(list)
+                $.ajax({
+                    url: '/com-list',
+                    data: {
+                        id: id,
+                        text: text
+                    },
+                    method: 'post',
+                    success: function(data) {
+                        console.log(data)
+                        if (data == 1) {
+                            layer.open({
+                                content: '请登录后评论',
+                                style: 'background-color:rgb(170, 221, 240);; color:#fff; border:none;width:20%' //自定风格
+                                    ,
+                                time: 1
+                            });
+                            m.css('display', 'none')
+
+                        } else {
+
+                            console.log(data)
+                            var str = '';
+                            data.forEach((val, index) => {
+
+                                if (id == val.id) {
+                                    str += '<p>' + (index + 1) + '.' + '<span>' + val.name + '</span>' + val.text + '<i>' + val.ct + '</i>' + '</p>'
+                                }
+                            });
+                            list.css('display', 'block')
+                            list.html(str)
+                            str = '';
+
+                            m.css('display', 'none')
+                        }
+                    }
+                })
+            })
+        })
+
+
+
+
+
+
+
+
+
+    })
+</script>
+
+</html>

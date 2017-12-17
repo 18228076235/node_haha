@@ -1,0 +1,200 @@
+body {
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+li {
+    list-style: none;
+}
+
+#navbar {
+    width: 90%;
+    margin: 0 auto;
+    background: rgb(170, 221, 240);
+    padding: 20px;
+}
+
+#navbar ul {
+    width: 30%;
+}
+
+#navbar ul li a {
+    font-size: 15px;
+    color: rgb(26, 9, 102);
+    background: rgb(205, 243, 240);
+    border-radius: 20px;
+}
+
+#navbar img {
+    width: 70px;
+    height: 50px;
+    margin-left: 7%;
+    display: block;
+    float: left;
+}
+
+#navbar img:hover {
+    transform: rotate(-45deg)
+}
+
+#navbar ul li .back {
+    font-size: 12px;
+    margin-left: 50%;
+    float: left;
+    text-align: center;
+    width: 100%;
+    padding: 5%;
+    color: rgb(66, 71, 83);
+    background: rgb(81, 123, 138);
+    color: white;
+}
+
+.title {
+    display: inline;
+    margin: 0 auto;
+    color: #6b0248;
+    letter-spacing: 40px;
+}
+
+.from {
+    background: rgb(123, 231, 233);
+    height: 70%;
+    padding-bottom: 10%;
+}
+
+.login h2 {
+    text-align: center;
+    color: #428bca;
+    margin-top: -10%;
+    margin-bottom: 5%;
+}
+
+.login {
+    width: 70%;
+    margin: 4% auto;
+    background: #eee;
+    padding: 15%;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group span {
+    display: none;
+}
+
+.form-group img {
+    width: 15%;
+    height: 100%;
+    position: absolute;
+    top: 7%;
+    left: 100%;
+}
+
+.form-group i {
+    color: rgb(235, 111, 111);
+    font-size: 12px;
+}
+
+#cot-main {
+    width: 100%;
+    background: url(/images/01.jpg)no-repeat;
+    background-size: 80% 60%;
+}
+
+#cot-main ul {
+    width: 100%;
+    height: 100%;
+    background: rgba(230, 231, 231, 0.7);
+    padding: 8%;
+    padding-top: 7%;
+}
+
+#cot-main ul li {
+    width: 100%;
+    margin: 2%;
+    box-shadow: 0px 0px 12px 2px #eee;
+    padding: 5%;
+    border-radius: 1%;
+    background: rgba(200, 228, 238, 0.9);
+}
+
+#cot-main ul li div:nth-child(1) {
+    color: rgb(105, 77, 77);
+    box-shadow: 0px 0px 12px 2px #eee;
+    border-radius: 1%;
+    width: 100%;
+    height: auto;
+    padding: 5%;
+}
+
+#cot-main ul li .hate,
+#cot-main ul li .like {
+    width: 30px;
+    display: inline-block;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+#cot-main ul li .like img {
+    width: 300%;
+    height: 300%;
+    position: absolute;
+    left: -31px;
+    right: 0;
+    bottom: 0;
+    top: -29px
+}
+
+#cot-main ul li .hate img {
+    width: 150%;
+    height: 150%;
+    position: absolute;
+    left: -7px;
+    right: 0px;
+    bottom: 0;
+    top: -6px;
+}
+
+.do-you {
+    width: 70%;
+    float: left;
+}
+
+.lik {
+    color: rgb(236, 115, 115);
+    padding: 10px;
+}
+
+.hat {
+    color: rgb(74, 129, 202);
+    padding: 10px;
+}
+
+.my img {
+    width: 50px;
+    height: 50px;
+    margin-right: 5%;
+}
+
+.my {
+    font-size: 13px;
+    color: rgb(105, 77, 77);
+    float: right;
+    width: 30%;
+}
+
+.glyphicon-circle-arrow-left {
+    position: absolute !important;
+    top: 30% !important;
+    left: 6% !important;
+    text-decoration: none !important;
+}

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        最新评论
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <style>
+        #cot-main ul li {
+            width: 100%;
+            margin: 2%;
+            box-shadow: 0px 0px 12px 2px #eee;
+            padding: 5%;
+            border-radius: 1%;
+            background: rgba(209, 226, 225, 0.9);
+        }
+        
+        #cot-main ul li div:nth-child(1) {
+            position: relative;
+        }
+        
+        .title {
+            position: absolute;
+            top: -10%;
+            left: 0;
+            text-align: center;
+            width: 100%;
+            letter-spacing: 5px;
+            color: rgb(49, 97, 99);
+            font-size: 15px;
+            font-weight: bolder
+        }
+        
+        .chek-love,
+        .chek-hate {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .time {
+            font-size: 1%;
+            color: rgb(64, 78, 94);
+        }
+        
+        .page {
+            width: 50%;
+            margin: 0 auto;
+            height: 30%;
+        }
+        
+        .page a {
+            padding: 1%;
+            background: rgb(64, 122, 231);
+            border-radius: 10%;
+            margin: 0% 5%;
+            margin-bottom: 100px;
+            color: white;
+        }
+        
+        .like:hover img {
+            padding: 10%;
+            transform: rotate(180deg)
+        }
+        
+        .hate:hover img {
+            padding: 10%;
+            transform: rotate(180deg)
+        }
+        
+        .comment {
+            padding: 2%;
+            background: rgb(248, 138, 138);
+            position: fixed;
+            left: 5%;
+            top: 40%;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            line-height: 10%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        <% if(username){%>
+            <%-include("head",{name:username,login:"",register:'',out:"退出",center:"glyphicon glyphicon-user"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:"",center:""})%>
+                        <%  }%>
+
+    </h1>
+    <div class="comment  glyphicon glyphicon-pencil" onclick="window.location.href='/comment'">发帖</div>
+    <div id="cot-main">
+        <ul>
+            <%resout.forEach((val,inx)=>{%>
+                <li>
+                    <div>
+                        <span class="title">
+                           tilte:<%-val.title%>
+                        </span><br>
+                        <%-val.text%>
+                    </div>
+
+                    <div class="do-you">
+                        <span class="lik">like:<em><%-val.love%></em></span><i class="like"><img src="/images/11.jpeg" alt="" /><input type="checkbox" name="" class="chek-love" data-id='<%-val.id%>'></i>
+                        <span class="hat">hate:<em><%-val.hate%></em></span> <i class="hate"><img src="/images/22.jpg" alt="" /><input type="checkbox" name="" class="chek-hate" data-id='<%-val.id%>'></i>
+                    </div>
+                    <p class="my"><img src='/images/noimage.png'><i><%-val.name%></i></p>
+                    <p class="time">
+                        <%-val.ct%>
+                    </p>
+                </li>
+                <%  })%>
+        </ul>
+
+        <div class="page">
+            <a href="/main?pageNo=1">首页</a>
+            <a href="/main?pageNo=<%-pageNo<=1?1:pageNo-1%>">上一页</a>
+            <a href="/main?pageNo=<%-pageNo>=page?page:pageNo+1%>">下一页</a>
+            <a href="/main?pageNo=<%-page%>">尾页</a>
+
+        </div>
+    </div>
+</body>
+<script src="/bootstrap/js/jquery-1.10.1.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+</html>
+
+<script>
+    $(function() {
+        //喜欢
+        $('.chek-love').click(function() {
+            var k = $(this).parent().prev().children();
+            var cont = 0;
+
+            if ($(this).prop('checked')) {
+                cont = 1;
+            } else {
+                cont = -1
+            }
+
+            $.ajax({
+                url: '/users/like',
+                method: 'get',
+                data: {
+                    id: $(this).attr('data-id'),
+                    cont: cont
+                },
+                success: function(data) {
+                    console.log(data)
+                    if (data == 1) {
+                        var cont = Number(k.html())
+                        cont++;
+                        k.html(cont)
+                    } else {
+                        var cont = Number(k.html())
+                        cont--;
+                        k.html(cont)
+                    }
+                }
+            })
+        })
+
+
+        //不喜欢
+        $('.chek-hate').click(function() {
+            var k = $(this).parent().prev().children();
+            var cont = 0;
+            if ($(this).prop('checked')) {
+                cont = 1;
+            } else {
+                cont = -1
+            }
+
+            $.ajax({
+                url: '/users/hate',
+                method: 'get',
+                data: {
+                    id: $(this).attr('data-id'),
+                    cont: cont
+                },
+                success: function(data) {
+
+                    if (data == 1) {
+                        var cont = Number(k.html())
+                        cont++;
+                        k.html(cont)
+                    } else {
+                        var cont = Number(k.html())
+                        cont--;
+                        k.html(cont)
+                    }
+                }
+            })
+        })
+    })
+</script>

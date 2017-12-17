@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/layer/mobile/need/layer.css" />
+</head>
+
+<body>
+    <h1>
+        <% if(username){%>
+            <%-include("head",{name:username,login:"",register:'',out:"退出",center:"glyphicon glyphicon-user"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:"",center:""})%>
+                        <%  }%>
+
+    </h1>
+    <div></div>
+    <div class="container from">
+
+        <form action="/users/login" method="post" class="login">
+            <h2>login</h2>
+            <div class="form-group">
+                <label for="username" class="text-primary">用户名</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名"><span><img src="/images/1171669.png" alt=""/></span>
+                <i></i>
+            </div>
+            <div class="form-group">
+                <label for="password" class="text-primary">密码</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码"><span><img src="/images/1171669.png" alt=""/></span>
+                <i></i>
+            </div>
+
+            <div><a>忘记密码？</a></div>
+            <button type="button" class="btn btn-primary">提交</button>
+            <button type="reset" class="btn btn-warning">重置</button>
+        </form>
+    </div>
+
+</body>
+<script src="/bootstrap/js/jquery-1.10.1.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/layer/mobile/layer.js"></script>
+<script>
+    $(function() {
+        $('.btn-primary').click(function() {
+            $.ajax({
+                url: '/users/login',
+                data: {
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                },
+                type: "post",
+                success: function(data) {
+                    if (data == 1) {
+
+                        layer.open({
+                            content: '用户名输入有误',
+                            btn: '我知道了',
+                            shadeClose: false,
+                            yes: function() {
+                                layer.open({
+                                    content: '好的',
+                                    time: 2,
+                                    skin: 'msg'
+                                });
+                            }
+                        });
+
+                    } else {
+
+                        if (data == $('#password').val()) {
+                            layer.open({
+                                content: '登录成功，前往首页',
+                                style: 'background-color:rgb(170, 221, 240);; color:#fff; border:none;width:50%' //自定风格
+                                    ,
+                                time: 1
+                            });
+                            setTimeout(function() {
+                                window.location.href = '/'
+                            }, 2000);
+                        } else {
+                            layer.open({
+                                content: '密码输入错误',
+                                btn: '我知道了',
+                                shadeClose: false,
+                                yes: function() {
+                                    layer.open({
+                                        content: '好的',
+                                        time: 2,
+                                        skin: 'msg'
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }
+            })
+        })
+
+    })
+</script>
+
+</html>

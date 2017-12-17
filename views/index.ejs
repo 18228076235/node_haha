@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/bootstrap-fileinput/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/bootstrap-fileinput/css/bootstrap-fileinput.css" />
+</head>
+<style>
+    .jumbotron img {
+        width: 50%;
+        float: left
+    }
+    
+    .hot,
+    .new {
+        width: 50%;
+        padding: 20% 0%;
+        background: url(/images/ha3.gif) no-repeat center center #d9e4e1;
+        border-radius: 20%;
+        background-size: 50%;
+        float: left;
+        font-size: 400%;
+        text-align: center;
+        cursor: pointer;
+        color: rgb(81, 123, 138);
+        margin: 5% 0%;
+        line-height: 10px;
+        position: relative;
+    }
+    
+    .new span {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    .hot span {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    
+    .new {
+        background: url(/images/ha2.gif) no-repeat center center #ebd9de;
+        border-radius: 20%;
+        background-size: 50%;
+        color: rgb(141, 99, 99);
+    }
+    
+    .text-center {
+        margin-top: 5%;
+        color: rgb(172, 121, 26);
+        font-weight: 900;
+    }
+</style>
+
+<body>
+    <h1>
+        <% if(username){%>
+            <%-include("head",{name:username,login:"",register:'',out:"退出",center:"glyphicon glyphicon-user"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:"",center:""})%>
+                        <%  }%>
+
+    </h1>
+    <div class="container">
+        <div class="jumbotron">
+            <h2 class="text-center">wellcome to Haha</h2>
+            <div class="new" onclick="window.location.href='/main'"><span>热门笑话</span></div>
+            <div class="hot" onclick="window.location.href='/new'"><span>最新笑话</span></div>
+
+            <p></p>
+            <p style="font-size:15px">一年奔波，尘缘遇了谁；一句珍重，天涯别了谁；一点灵犀，凭栏忆了谁；一种相思，闲愁予了谁；一江明月，豪情酬了谁；一场冬雪，烟波忘了谁；一壶浊酒，相逢醉了谁；一世浮生，轻狂撩了谁；一封短信，才情念了谁；一番思量，谁是谁的谁 ；一枚围脖，转发回复谁.....</p>
+            <p>
+                <a class="btn btn-lg btn-primary" href="/main" role="button">go to see more »</a>
+            </p>
+        </div>
+    </div>
+
+
+
+</body>
+<script src="/bootstrap/js/jquery-1.10.1.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/bootstrap-fileinput/js/bootstrap-fileinput.js"></script>
+
+</html>

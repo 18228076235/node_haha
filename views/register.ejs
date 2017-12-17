@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/layer/mobile/need/layer.css" />
+</head>
+<style>
+
+</style>
+
+<body>
+    <h1>
+        <% if(username){%>
+            <%-include("head",{name:username,login:"",register:'',out:"退出",center:"glyphicon glyphicon-user"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:"",center:""})%>
+                        <%  }%>
+
+    </h1>
+    <div></div>
+    <div class="container from">
+
+        <form action="/users/register" method="post" class="login">
+            <h2>register</h2>
+            <div class="form-group">
+                <label for="username" class="text-primary">用户名</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名"><span><img src="/images/1171669.png" alt=""/></span>
+                <i></i>
+            </div>
+            <div class="form-group">
+                <label for="password" class="text-primary">密码</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码"><span><img src="/images/1171669.png" alt=""/></span>
+                <i></i>
+            </div>
+            <div class="form-group">
+                <label for="repass" class="text-primary">重置密码</label>
+                <input type="password" class="form-control" id="repass" name="repass" placeholder="请输入密码"><span><img src="/images/1171669.png" alt=""/></span>
+                <i></i>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> 记住密码
+                    </label>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="#element">提交</button>
+            <button type="reset" class="btn btn-warning">重置</button>
+        </form>
+    </div>
+</body>
+<script src="/bootstrap/js/jquery-1.10.1.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/layer/mobile/layer.js"></script>
+
+<script>
+    $(function() {
+        //用户名
+
+
+        var username = $('input[name="username"]');
+
+        function name() {
+            if (username.val() == '') {
+                username.next().next().html("用户名不能为空")
+                return false;
+            }
+            if (/^(([a-zA-Z])|([\u4e00-\u9fa5])){3,6}$/.test(username.val()) == false) {
+                username.next().next().html("你输入的格式有误,请输入3-6位中英文字母")
+                return false;
+            } else {
+                $.ajax({
+                    url: '/users/findname',
+                    data: {
+                        name: username.val()
+                    },
+                    type: "get",
+                    success: function(data) {
+                        if (data == 2) {
+                            username.next().next().html("该用户已经注册")
+                            return false;
+                        } else {
+                            username.next().next().html("");
+                            username.next().css("display", "block");
+                            return 1;
+                        }
+                    }
+                })
+                return true;
+            }
+        }
+
+
+        username.blur(function() {
+            name()
+        })
+
+        //密码
+        var password = $('input[name="password"]');
+        var repass = $('input[name="repass"]')
+
+        function pass() {
+            if (password.val() == '') {
+                password.next().next().html("密码不能为空");
+                return false;
+            }
+            if (/^([a-zA-Z]|\d|_){6,12}$/.test(password.val()) == false) {
+                password.next().next().html("请输入6-12位密码，可以由数字字母和_组成");
+                return false;
+            } else {
+                password.next().css("display", "block");
+                password.next().next().html("");
+                return true;
+            }
+
+        }
+
+
+
+        function rep() {
+            if (repass.val() == '') {
+                return false;
+            }
+            if (password.val() != repass.val()) {
+                repass.next().next().html("您输入的密码不一致，请从新输入");
+                return false;
+            } else {
+                repass.next().css("display", "block")
+                password.next().next().html("")
+                return true;
+            }
+        }
+
+        password.blur(function() {
+            pass();
+
+        })
+        repass.blur(function() {
+            pass();
+            rep()
+        })
+
+        $('.btn-primary').click(function() {
+            var a = pass();
+            var b = name();
+            var p = rep();
+
+            if (b && a && p) {
+                console.log(username.val(), password.val())
+                $.ajax({
+                    url: '/users/register',
+                    data: {
+                        name: username.val(),
+                        password: password.val()
+                    },
+                    type: "get",
+                    success: function(data) {
+                        console.log(data)
+                        if (data == 0) {
+                            layer.open({
+                                content: '注册失败，该用户已经注册喽',
+                                btn: '我知道了',
+                                shadeClose: false,
+                                yes: function() {
+                                    layer.open({
+                                        content: '好的',
+                                        time: 2,
+                                        skin: 'msg'
+                                    });
+                                }
+                            });
+                        } else {
+
+                            layer.open({
+                                content: '恭喜你注册成功,前往登录',
+                                style: 'background-color:rgb(170, 221, 240);; color:#fff; border:none;width:50%' //自定风格
+                                    ,
+                                time: 3
+                            });
+                            setTimeout(function() {
+                                window.location.href = '/login'
+                            }, 2000);
+                        }
+
+                    }
+                })
+            }
+        })
+    })
+</script>
+
+
+
+
+
+
+
+
+</html>

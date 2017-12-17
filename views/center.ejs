@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <style>
+        .like-or-hate img {
+            width: 10%;
+            height: 10%;
+        }
+        
+        .like-or-hate {
+            width: 120%;
+            margin: 0% auto;
+            margin-left: -10%;
+            padding-bottom: 50%;
+            box-shadow: 0 0 5 2 #000000;
+        }
+        
+        .jumbotron {
+            height: 200%;
+        }
+        
+        .like-or-hate .like,
+        .like-or-hate .hate {
+            float: left;
+            width: 40%;
+            background: rgb(250, 196, 196);
+            margin: 5%;
+            padding: 5%;
+            box-shadow: 0 0 5px 2px rgb(146, 168, 168);
+            border-radius: 10%;
+        }
+        
+        .like-or-hate a {
+            display: block;
+            cursor: pointer;
+            padding: 1%;
+        }
+        
+        .like-or-hate .hate {
+            background: rgb(146, 168, 168);
+            box-shadow: 0 0 5px 2px rgb(250, 196, 196);
+            cursor: pointer;
+        }
+        
+        .my-jok {
+            background: #d2ebee;
+            padding: 5%;
+            border-radius: 5%;
+            color: rgb(94, 72, 72);
+            margin: 5%;
+        }
+        
+        .my-jok .me {
+            float: right;
+            font-size: 12px;
+            font-weight: 900;
+        }
+        
+        .my-jok .time {
+            font-size: 12px;
+            color: #5e7879;
+            width: 100%;
+            text-align: right;
+        }
+        
+        .my-jok .me i:nth-child(1) em {
+            padding: 5%;
+            color: red;
+        }
+        
+        .my-jok .me i:nth-child(2) em {
+            padding: 5%;
+            color: rgb(23, 23, 94);
+            ;
+        }
+        
+        .modal-body {
+            border: none;
+            width: 100%;
+            color: rgb(5, 92, 107);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        <% if(username){%>
+            <%-include("head",{name:username,login:"",register:'',out:"退出",center:"glyphicon glyphicon-user"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:"",center:""})%>
+                        <%  }%>
+
+    </h1>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h2 class="text-center">个人中心</h2>
+            <div><a>设置</a></div>
+
+            我的段子：
+            <%resoutOne.forEach((vel,index)=>{%>
+                <div class="my-jok">
+                    <p style="font-size:15px" class="main-cont">
+                        <%-vel.text%>
+                    </p>
+                    <button type="button" class="btn btn-warning btn-mini" data-id='<%-vel.id%>'>删除</button>
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-info btn-ms" data-toggle="modal" data-target="#myModal" data-id='<%-vel.id%>'>
+                        修改
+                     </button>
+                    <p class="me"><i>likeme:<em><%-vel.love%></em></i><i>hateme:<em><%-vel.hate%></em></i></p>
+                    <p class="time">
+                        <%-vel.ct%>
+                    </p>
+                </div>
+
+                <%})%>
+
+                    <div class="like-or-hate">
+                        <div class="like">
+                            <img src="/images/5.jpg" alt="" /> 我喜欢：
+                            <%resoutTow.forEach((val,index)=>{%>
+                                <a>
+                                    <%-val.name%>:
+                                        <%-val.text%>
+
+                                </a>
+                                <%})%>
+                        </div>
+                        <div class="hate">
+                            <img src="/images/5.jpg" alt="" /> 我讨厌：
+                            <a>
+                                <%resoutTree.forEach((val,index)=>{%>
+                                    <%-val.name%>:
+                                        <%-val.text%>
+                                            <% })%>
+                            </a>
+                        </div>
+
+                    </div>
+        </div>
+
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Change Content</h4>
+                </div>
+
+                <input type="text" class="modal-body" value="hsudhsuidhsu" />
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/bootstrap/js/jquery-1.10.1.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+    $(function() {
+        $('.btn-warning').click(function() {
+            var mm = $(this).parent();
+
+            $.ajax({
+                url: '/users/delet',
+                data: {
+                    id: $(this).attr('data-id')
+                },
+                method: 'get',
+                success: function(data) {
+                    if (data == 1) {
+                        mm.css('display', 'none')
+
+                    }
+                }
+            })
+        })
+    })
+
+
+    //修改
+    $('#myModal').on('shown.bs.modal', function() {
+        $('#myInput').focus()
+        $('.btn-primary').attr('data-dismiss', 'modal');
+        var id = $('.btn-info').attr('data-id')
+        var text = $('button[data-id=' + id + ']').prev().prev()
+        console.log(text)
+        $('.btn-primary').click(function() {
+            var k = $('.modal-body').val();
+
+            $.ajax({
+                url: '/users/update',
+                data: {
+                    id: id,
+                    cont: k
+                },
+                method: 'post',
+                success: function(data) {
+                    if (data == 1) {
+                        text.html(k)
+                    }
+                }
+            })
+
+        })
+    })
+</script>
+
+</html>

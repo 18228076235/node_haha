@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+
+    <script type="text/javascript" src="/javascripts/xheditor/jquery/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="/javascripts/xheditor/xheditor-1.2.2.min.js"></script>
+    <script type="text/javascript" src="/javascripts/xheditor/xheditor_lang/zh-cn.js"></script>
+    <script src="/layer/mobile/layer.js"></script>
+    <link rel="stylesheet" href="/layer/mobile/need/layer.css" />
+    <title>评论电影</title>
+</head>
+<style>
+    form {
+        margin: 10% auto;
+    }
+    
+    .xheLayout {
+        width: 90% !important;
+    }
+    
+    .layui-m-layershade {
+        display: none
+    }
+    
+    .btn-primary {
+        margin-left: 100%;
+        width: 200%;
+        display: block;
+        float: left;
+    }
+    
+    form {
+        width: 90%;
+        margin: 6% auto;
+        padding: 10%;
+        border-radius: 1%;
+        background: #eeeeee;
+    }
+</style>
+
+<body>
+    <h1>
+        <% if(username){%>
+            <%-include("head",{name:username,login:"",register:'',out:"退出",center:"glyphicon glyphicon-user"})%>
+                <% }else{%>
+                    <%-include("head",{name:"",login:"login",register:'register',out:"",center:""})%>
+                        <%  }%>
+
+    </h1>
+
+
+    <form action="/submit" method="post">
+        <label for="">
+                    标题:
+                    <input type="text" name="title" placeholder="标题"/>
+                </label>
+        <label for="">
+                    内容:
+                    <textarea name="content" placeholder="内容" rows="20" cols="120" id="content"></textarea>
+                </label>
+        <label for="">
+                    <input type="button" class="btn btn-primary" value="提交评论"> 
+                </label>
+    </form>
+
+    <script type="text/javascript">
+        $(pageInit);
+
+        //  comment.ejs  /comment/index
+        function pageInit() {
+            $.extend(XHEDITOR.settings, {
+                shortcuts: {
+                    "ctrl+enter": submitForm
+                }
+            });
+            // $("#ele").xheditor();
+            $("#content").xheditor({ //初始化 富文件编辑框
+                html5Upload: false,
+                upMultiple: "1",
+
+                upLinkRrl: "upload.html",
+                upLinkExt: "zip,rar,txt",
+
+                upImgUrl: "/uploadImg",
+                upImgExt: "jpg,jpeg,gif,png",
+
+                upFlashUrl: "upload.php",
+                upFlashExt: "swf",
+
+                upMediaUrl: "upload.php",
+                upMediaExt: "wmv,avi,wma,mp3,mid"
+
+            });
+        };
+
+        function insertUpload(arrMsg) {
+            console.log(arrMsg);
+            var i, msg;
+            for (var i = 0; i < arrMsg.length; i++) {
+                msg = arrMsg[i];
+                console.log(msg);
+                $("#uploadList").append('<option value="' + msg.id + '">' + msg.localname + '</option>')
+            }
+        };
+
+        function submitForm() {
+            $("#frmDemo").submit();
+        }
+
+
+
+
+        //跳转
+
+        $('input[type="button"]').click(function() {
+            if ($('input[type = "text"]').val() == '') {
+                layer.open({
+                    content: '标题不能为空哦',
+                    style: 'background-color:rgba(236, 115, 115,0.3); border:none;width:300px;color:blue' //自定风格
+                        ,
+                    time: 1
+                });
+                return false
+            };
+
+            if ($('#content').val() == '') {
+                layer.open({
+                    content: '评论不能为空',
+                    style: 'background-color:rgba(236, 115, 115,0.3); border:none;width:300px;color:blue' //自定风格
+                        ,
+                    time: 1
+                });
+                return false;
+            } else {
+                $.ajax({
+                    url: '/submit',
+                    method: 'post',
+                    data: {
+                        cotent: $('#content').val(),
+                        title: $('input[type = "text"]').val()
+                    },
+                    success: function(data) {
+                        console.log(data)
+                        if (data == 0) {
+                            window.location.href = '/login'
+                        } else {
+                            window.location.href = '/new'
+                        }
+                    }
+                })
+            }
+        })
+    </script>
+
+
+</body>
+
+</html>
